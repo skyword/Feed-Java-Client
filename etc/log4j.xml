@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+
+<log4j:configuration >
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <param name="Encoding" value="UTF-8"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%5p [%d{dd MMM yyyy HH:mm:ss}] (%C{1}:%t) %m%n"/>
+		</layout>
+	</appender>
+
+	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/home/gather/logs/SkywordPullapiClient.log" />
+		<param name="MaxFileSize" value="2000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+        <param name="Encoding" value="UTF-8"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%5p [%d{dd MMM yyyy HH:mm:ss}] (%C{1}) %m%n"/>
+		</layout>
+	</appender>
+
+	<category name="pullApiClient.SkywordPull" additivity="false">
+		<priority value="info"/>
+		<appender-ref ref="STDOUT"/>
+		<appender-ref ref="FILE"/>
+	</category>
+    
+	<root>
+		<priority value="info" />
+		<appender-ref ref="STDOUT"/>
+		<appender-ref ref="FILE"/>
+	</root>
+	
+</log4j:configuration>
