@@ -77,7 +77,7 @@ public class SkywordPull {
 
     public static void main(String[] args) {
         try {
-            String key = "3a4afo754wm52g6591kf";
+            String key = "";
             if (args.length > 0) {
                 key = args[0];
             }
@@ -93,10 +93,8 @@ public class SkywordPull {
                 sp.setBaseUrl(overrideUrl);
             }
 
-            FileAttachment fa = sp.getFileAttachment(7149);
-            log.info("MimeType: " + fa.getMimeType());
-            // List<Map<String, String>> listData = sp.pull();
-            // printData(listData);
+            List<Map<String, String>> listData = sp.pull();
+            printData(listData);
 
         } catch (Exception e) {
             log.error("Error in pull", e);
