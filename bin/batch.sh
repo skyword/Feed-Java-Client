@@ -14,6 +14,6 @@ do
         cp=$cp:$i
 done
 
-java -d64 -Dfile.encoding=UTF8 -Xmx2048M -Dcom.sun.management.jmxremote -Xdebug -Xrunjdwp:transport=dt_socket,address=8030,server=y,suspend=n -classpath $cp pullApiClient.SkywordPull $1  $2  $3 $4 $5 $6 $7 $8 
+java -d64 -Dfile.encoding=UTF8 -Xmx2048M -Dcom.sun.management.jmxremote -Xdebug -Xrunjdwp:transport=dt_socket,address=8030,server=y,suspend=n -classpath $cp skywordFeedClient.SkywordPull $1  $2  $3 $4 $5 $6 $7 $8 
 
 
