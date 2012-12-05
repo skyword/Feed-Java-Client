@@ -29,7 +29,7 @@ public class SkywordPublishJob {
         // Parse the command line
         parameters = parseCommandLine(args);
 
-        String key = "1rs5nqvbq3be2sacxeor";
+        String key = "";
         String overrideUrl = null;
 
         try {
