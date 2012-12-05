@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -212,7 +215,11 @@ public class SkywordPull {
 
         // This method will notify the Skyword system that the article has been received and provide
         // the article's public Url so that it can be recorded in Skyword's CMS.
-        String publicUrl = publishUrl.concat("&contentId=" + contentId + "&url=" + URLEncoder.encode(publishedUrl, "UTF-8"));
+        String publicUrl = publishUrl.concat("&contentId=" + contentId);
+
+        if (publishedUrl != null) {
+            publicUrl = publicUrl.concat("&url=" + URLEncoder.encode(publishedUrl, "UTF-8"));
+        }
 
         String postData = null;
 
@@ -273,6 +280,23 @@ public class SkywordPull {
 
         return fa;
 
+    }
+
+    public static String createSEOTitle(String input) throws UnsupportedEncodingException {
+        if (input == null || input.length() == 0)
+            return "";
+        String toReturn = normalize(input);
+        toReturn = toReturn.replace(" ", "-");
+        toReturn = toReturn.replace("'", "");
+        toReturn = toReturn.toLowerCase();
+        toReturn = URLEncoder.encode(toReturn, "UTF-8");
+        return toReturn;
+    }
+
+    private static String normalize(String input) {
+        if (input == null || input.length() == 0)
+            return "";
+        return Normalizer.normalize(input, Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 
     private String getPostData(HttpMethodBase method) throws Exception {
