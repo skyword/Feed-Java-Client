@@ -82,12 +82,19 @@ public class SkywordFeed {
         // saveToCMS needs to be overridden in the client's code to add/update/delete
         // each article from their own CMS. It should return the full public URL for the article.
         for (Map<String, Object> oneArticle : listData) {
-            publicUrl = saveToCMS(oneArticle);
+            String action = (String) oneArticle.get("action");
             log.info("id: " + oneArticle.get("id"));
             contentId = Long.valueOf((String) oneArticle.get("id"));
-            String createUpdate = (String) oneArticle.get("action");
-            if ("create".equals(createUpdate) || "update".equals(createUpdate)) {
-                publishNotify(contentId, publicUrl);
+            try {
+                if ("create".equals(action) || "update".equals(action)) {
+                    publicUrl = saveToCMS(oneArticle);
+                    publishNotify(contentId, publicUrl);
+                } else if ("delete".equals(action)) {
+                    removeFromCMS(oneArticle);
+                    publishNotify(contentId, null);
+                }
+            } catch (Exception e) {
+                log.error("Exception in processing of article id: " + contentId, e);
             }
         }
 
@@ -214,6 +221,22 @@ public class SkywordFeed {
         // This method is just a stub that does nothing. This needs to be overridden to insert
         // the article data into your own CMS.
         throw new Exception("This method must be overridden to save the article contents into the CMS.");
+    }
+
+    /**
+     * Stub method that must be overridden by an extending class to remove the article
+     * from your local CMS.
+     * 
+     * This method is called automatically by the getSkywordContents() method above.
+     * 
+     * @param articleContents
+     * @return
+     * @throws Exception
+     */
+    public void removeFromCMS(Map<String, Object> articleContents) throws Exception {
+        // This method is just a stub that does nothing. This needs to be overridden to insert
+        // the article data into your own CMS.
+        throw new Exception("This method must be overridden to remove the article contents from the CMS.");
     }
 
     /**

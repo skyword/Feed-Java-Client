@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.skyword.api.feed.HelperMethods;
 import com.skyword.api.feed.SkywordFeed;
 
 public class SkywordPublishJob extends SkywordFeed {
@@ -87,7 +88,15 @@ public class SkywordPublishJob extends SkywordFeed {
             }
         }
 
+        articleUrl = "http://www.skywordClient.com/" + HelperMethods.generateSlug((String) articleContents.get("title"));
+        log.info("Publish Url: " + articleUrl);
+
         return articleUrl;
+    }
+
+    public void removeFromCMS(Map<String, Object> articleContents) throws Exception {
+        log.info("Removing content with id: " + articleContents.get("contentRequestId"));
+        log.info("MemberId: " + articleContents.get("memberId"));
     }
 
     /**
