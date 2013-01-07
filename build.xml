@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 
-<project name="Skyword PullApi Client Code" default="compile" basedir=".">
+<project name="Skyword PullApi Client Code" default="all" basedir=".">
 
 	<!-- ================================================== -->
 	<!-- Load the properties, error out if unable to!       -->
@@ -10,7 +10,7 @@
 	<property file="build.properties" />
 
 	<property name="pullapiclient.build.out" value="build_out"/>
-	<property name="pullapiclient.build.out.dist" value="build_out/dist"/>
+	<property name="pullapiclient.build.out.dist" value="build_out/dist/skyword-xml-api"/>
 	<property name="pullapiclient.lib" value="lib"/>
 	<property name="build.dir" value="build_out/classes" />
 	<property name="generated.java.files" value="${basedir}" />
@@ -78,8 +78,9 @@
 	        <fileset dir="${src-samples.dir}" />
 	    </copy>
 
-		<zip destfile="${pullapiclient.build.out.dist}/skyword-xml-feed-java-kit.zip"
-		       basedir="${pullapiclient.build.out.dist}"
+		<zip destfile="${pullapiclient.build.out}/skyword-xml-feed-java-kit.zip"
+		       basedir="${pullapiclient.build.out}/dist"
+			   
 		/>
 		
 	</target>
@@ -90,7 +91,6 @@
 		<mkdir dir="${build.dir}" />		
 		<mkdir dir="${pullapiclient.build.out.dist}/lib" />
 		<mkdir dir="${pullapiclient.build.out.dist}/samples" />
-		<mkdir dir="${pullapiclient.build.out.dist}/etc" />		
 		<mkdir dir="${pullapiclient.build.out.dist}/src" />
 		<mkdir dir="${pullapiclient.build.out.dist}/documentation" />
 		<mkdir dir="${pullapiclient.build.out.dist}/documentation/javadoc" />
