@@ -88,6 +88,7 @@ public class SkywordFeed {
             try {
                 if ("create".equals(action) || "update".equals(action)) {
                     publicUrl = saveToCMS(oneArticle);
+                    // Only notify Skyword IF the article has a URL
                     if ( publicUrl != null ) {
                         publishNotify(contentId, publicUrl);
                     }
@@ -213,10 +214,13 @@ public class SkywordFeed {
      * Stub method that must be overridden by an extending class to save the article
      * to your local CMS.
      * 
+     * Return the URL of the published content OR NULL if you will be relying on Skyword
+     * to detect the publication of the article.
+     * 
      * This method is called automatically by the getSkywordContents() method above.
      * 
      * @param LinkedHashMap containing a single article in name, value format.
-     * @return The public URL that the article is/will be viewable by end users.
+     * @return The public URL that the article is/will be viewable by end users or NULL if not known.
      * @throws Exception
      */
     public String saveToCMS(Map<String, Object> articleContents) throws Exception {

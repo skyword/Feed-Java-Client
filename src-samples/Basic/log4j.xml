@@ -10,8 +10,8 @@
 		</layout>
 	</appender>
 
-	<category name="pullApiClient.SkywordPull" additivity="false">
-		<priority value="info"/>
+	<category name="com.skyword" additivity="false">
+		<priority value="debug"/>
 		<appender-ref ref="STDOUT"/>
 	</category>
     

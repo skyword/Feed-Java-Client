@@ -40,7 +40,7 @@ public class SkywordBasicFeedJob extends SkywordFeed {
     public static void main(String[] args) throws Exception {
 
         // Your Skyword API Key goes here
-        String key = "API_KEY_HERE";
+        String key = "20jc3jbfuehkguwsf5gp";
 
         SkywordBasicFeedJob sc = new SkywordBasicFeedJob();
         sc.setKey(key);
@@ -84,10 +84,9 @@ public class SkywordBasicFeedJob extends SkywordFeed {
             }
         }
 
-        articleUrl = "http://www.skywordClient.com/" + HelperMethods.generateSlug((String) articleContents.get("title"));
-        log.info("Publish Url: " + articleUrl);
+        // Return NULL if the published URL is not known.
+        return null;
 
-        return articleUrl;
     }
 
     
