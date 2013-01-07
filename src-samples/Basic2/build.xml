@@ -1,0 +1,15 @@
+
+
+<project name="Skyword Basic Example" default="run" basedir=".">
+
+	<path id="skyword.java.sdk.classpath">
+        <fileset dir="../../lib" includes="**/*.jar"/>
+        <pathelement location="."/>
+    </path>
+
+    <target name="run">
+        <javac srcdir="." destdir="." classpathref="skyword.java.sdk.classpath"/>
+        <java classname="SkywordBasicFeedJob" classpathref="skyword.java.sdk.classpath" fork="true" />
+    </target>
+	
+</project>
