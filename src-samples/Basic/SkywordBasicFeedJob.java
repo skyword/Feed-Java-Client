@@ -39,7 +39,7 @@ public class SkywordBasicFeedJob extends SkywordFeed {
     
     public static void main(String[] args) throws Exception {
 
-        // Your Skyword API Key goes here
+        // Replace this with YOUR API Key!!
         String key = "20jc3jbfuehkguwsf5gp";
 
         SkywordBasicFeedJob sc = new SkywordBasicFeedJob();
@@ -54,7 +54,8 @@ public class SkywordBasicFeedJob extends SkywordFeed {
     /**
      * Overrided method that would actually store the content into your CMS.
      * 
-     * The return vaslue should the the fully qualified URL where the article was published to.
+     * The return vaslue should the the fully qualified URL where the article was published to
+     * or NULL if not known or you want Skyword to auto-detect publication.
      *  
      */
     public String saveToCMS(Map<String, Object> articleContents) throws Exception {
