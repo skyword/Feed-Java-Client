@@ -14,10 +14,11 @@
 	<property name="pullapiclient.lib" value="lib"/>
 	<property name="build.dir" value="build_out/classes" />
 	<property name="generated.java.files" value="${basedir}" />
-	<property name="src.dir" value="${basedir}/src" />
+	<property name="src-api.dir" value="${basedir}/src-api" />
+	<property name="src-samples.dir" value="${basedir}/src-samples" />
 	<property name="docs.dir" value="${basedir}/docs" />
 
-    <target name="all" depends="config, javadoc, dist"/>
+    <target name="all" depends="clean, javadoc, dist"/>
     	
 	<!-- Project classpath -->
 	<path id="pullapiclient.classpath">
@@ -27,77 +28,52 @@
 		<pathelement path="${build.dir}" />
 	</path>
 
-	<!-- ================================================== -->
-	<!-- OUR PUBLIC TARGETS                                 -->
-	<!-- ================================================== -->
-	<target name="config" depends="slave-config" />
 	<target name="dist" depends="compile, slave-dist" />
-	<target name="compile" depends="compile-api" />
+	<target name="compile" depends="compile-api, compile-sample-basic" />
 
 	<target name="compile-api">
-		<javac srcdir="${src.dir}:${generated.java.files}" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+		<javac srcdir="${src-api.dir}:${generated.java.files}" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
 			<classpath refid="pullapiclient.classpath" />
 			<include name="**/*.java" />
 		</javac>
 	</target>
 
-
-	<target name="just-dist" depends="slave-dist" />
-
-	<!-- ================================================== -->
-	<!-- OUR PRIVATE TARGETS                                -->
-	<!-- ================================================== -->
-	<target name="slave-deploy" />
-	<target name="slave-clean">
+	<target name="compile-sample-basic">
+		<javac srcdir="${src-samples.dir}/Basic" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+			<classpath refid="pullapiclient.classpath" />
+			<include name="**/*.java" />
+		</javac>
+	</target>
+	
+	<target name="clean">
 		<delete dir="${build.dir}" />
 		<delete dir="${pullapiclient.build.out}" />
-	</target>
-
-	<target name="slave-database-deploy" />
-	<target name="slave-compile-dist" depends="slave-compile,slave-dist" />
-
-	<target name="slave-config"> 
-		<mkdir dir="${build.dir}" />
-		<mkdir dir="${pullapiclient.build.out}" />
-	</target>
-
-	<target name="slave-compile" depends=" prepare">
-		<javac srcdir="${src.dir}" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
-			<classpath refid="pullapiclient.classpath" />
-			<include name="**/*.java" />
-		</javac>
 	</target>
 
 	<target name="javadoc" depends="prepare" description="Create Javadocs for the source files">
 		<javadoc 
 	         destdir="${pullapiclient.build.out.dist}/documentation/javadoc/"
- 		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${basedir/src}">
+ 		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${src-api.dir}">
 	         <fileset dir="${basedir}/" includes="**/*.java" />
 	     </javadoc>
 	</target>
-	
-	
+		
 	<target name="slave-dist">
 	    <copy todir="${pullapiclient.build.out.dist}/documentation" >
 	        <fileset dir="${docs.dir}" />
 	    </copy>
 
 	    <copy todir="${pullapiclient.build.out.dist}/src" >
-	        <fileset dir="${src.dir}" excludes="samples/**"/>
+	        <fileset dir="${src-api.dir}" excludes="samples/**"/>
 	    </copy>
 
-		<jar destfile="${pullapiclient.build.out.dist}/lib/skyword-feed-client.jar" basedir="${build.dir}" />
+		<jar destfile="${pullapiclient.build.out.dist}/lib/skyword-feed-client.jar" basedir="${build.dir}" includes="com/**" />
 	    <copy todir="${pullapiclient.build.out.dist}/lib">
 	        <fileset dir="${pullapiclient.lib}" />
 	    </copy>
-		
-	    <!-- Copy the property files -->
-	    <copy todir="${pullapiclient.build.out.dist}/etc">
-	        <fileset dir="./etc" />
-	    </copy>
-		
+				
 	    <copy todir="${pullapiclient.build.out.dist}/samples">
-	        <fileset dir="${src.dir}/samples/" />
+	        <fileset dir="${src-samples.dir}" />
 	    </copy>
 
 		<zip destfile="${pullapiclient.build.out.dist}/skyword-xml-feed-java-kit.zip"
