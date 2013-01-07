@@ -1,5 +1,10 @@
 package com.skyword.api.feed;
 
+/**
+ * A class to hold the datatype for a file attachment which includes the bytes of the file and the mime type.
+ * @author john
+ *
+ */
 public class FileAttachment {
     String mimeType;
     byte[] fileData;

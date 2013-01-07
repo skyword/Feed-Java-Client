@@ -14,6 +14,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Main API class to extend.  Override the methods savetoCMS() and removeFromCMS()
+ * 
+ *
+ */
 public class SkywordFeed {
 
     protected static Log log = LogFactory.getLog(SkywordFeed.class);

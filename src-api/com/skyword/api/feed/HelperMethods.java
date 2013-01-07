@@ -24,6 +24,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+/**
+ * Helper methods that can be used generically. 
+ * 
+ *
+ */
 public class HelperMethods {
 
     /**
