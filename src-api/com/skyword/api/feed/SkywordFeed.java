@@ -176,6 +176,9 @@ public class SkywordFeed {
      * @throws Exception
      */
     public ArticleContents convertXMLToArticleContents(String xmlString, String containerName) throws Exception {
+
+        log.debug("Parseing XML...");
+        
         Document document = HelperMethods.convertXMLStringToDocument(xmlString);
         final NodeList nodes = HelperMethods.performXPathEvaluation(document, "//" + containerName);
 
@@ -272,7 +275,7 @@ public class SkywordFeed {
         HttpMethodBase baseMethod = new GetMethod(publicUrl);
         baseMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
 
-        log.debug("Publish Request for URL: " + publicUrl);
+        log.debug("Publish notify for URL: " + publicUrl);
 
         HttpClient client = HelperMethods.setupClient();
         try {

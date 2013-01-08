@@ -63,16 +63,14 @@ public class SkywordBasicFeedJob extends SkywordFeed {
         String articleUrl = null;
 
         log.info("Publishing content with Skyword Id: " + articleContents.get("id"));
-
         log.info("title: " + articleContents.get("title"));
         log.info("body: " + articleContents.get("body"));
-
         log.info("titleTag: " + articleContents.get("titleTag"));
         log.info("metaDescription: " + articleContents.get("metaDescription"));
         log.info("metaKeyword: " + articleContents.get("metaKeywordTag"));
-
         log.info("author: " + articleContents.get("author"));
 
+        // Parse the <tags> node for comma delimited keywords
         if (articleContents.get("tags") != null) {
             StringTokenizer st = new StringTokenizer((String) articleContents.get("tags"), ",");
             while (st.hasMoreElements()) {
@@ -88,18 +86,6 @@ public class SkywordBasicFeedJob extends SkywordFeed {
         // Return NULL if the published URL is not known.
         return null;
 
-    }
-
-    
-    /**
-     * Overridded method that deletes content from your CMS.
-     * 
-     * Note, deletes are optionally impemented and not required by Skyword.
-     * 
-     */
-    public void removeFromCMS(Map<String, Object> articleContents) throws Exception {
-        log.info("Removing content with id: " + articleContents.get("contentRequestId"));
-        log.info("MemberId: " + articleContents.get("memberId"));
     }
     
     
