@@ -56,6 +56,11 @@
  		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${src-api.dir}">
 			 <bottom><![CDATA[<i>Copyright &#169; 2013 Skyword, Inc. All Rights Reserved.</i>]]></bottom>
 	         <fileset dir="${basedir}/" includes="**/*.java" />
+			 <classpath>
+			    <fileset dir="${pullapiclient.lib}">
+			        <include name="*.jar" />
+			    </fileset>
+			 </classpath>
 	     </javadoc>
 	</target>
 		

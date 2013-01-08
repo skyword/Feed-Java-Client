@@ -94,7 +94,7 @@ public class SkywordFeed {
                 if ("create".equals(action) || "update".equals(action)) {
                     publicUrl = saveToCMS(oneArticle);
                     // Only notify Skyword IF the article has a URL
-                    if ( publicUrl != null ) {
+                    if (publicUrl != null) {
                         publishNotify(contentId, publicUrl);
                     }
                 } else if ("delete".equals(action)) {
@@ -172,7 +172,7 @@ public class SkywordFeed {
      * 
      * @param xmlString
      * @param containerName
-     * @return
+     * @return ArticleContents
      * @throws Exception
      */
     public ArticleContents convertXMLToArticleContents(String xmlString, String containerName) throws Exception {
@@ -224,7 +224,7 @@ public class SkywordFeed {
      * 
      * This method is called automatically by the getSkywordContents() method above.
      * 
-     * @param LinkedHashMap containing a single article in name, value format.
+     * @param articleContents containing a single article in name, value format.
      * @return The public URL that the article is/will be viewable by end users or NULL if not known.
      * @throws Exception
      */
@@ -241,7 +241,6 @@ public class SkywordFeed {
      * This method is called automatically by the getSkywordContents() method above.
      * 
      * @param articleContents
-     * @return
      * @throws Exception
      */
     public void removeFromCMS(Map<String, Object> articleContents) throws Exception {

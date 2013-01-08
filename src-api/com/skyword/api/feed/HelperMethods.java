@@ -35,7 +35,7 @@ public class HelperMethods {
      * Method to generate a slug based on the inputed string.
      * 
      * @param input
-     * @return
+     * @return String slug created from input parameter
      * @throws UnsupportedEncodingException
      */
     public static String generateSlug(String input) throws UnsupportedEncodingException {
@@ -53,7 +53,7 @@ public class HelperMethods {
      * Normalize the string and convert any remaining non-ascii characters to empty strings.
      * 
      * @param input
-     * @return
+     * @return String
      */
     public static String normalize(String input) {
         if (input == null || input.length() == 0)
@@ -65,7 +65,7 @@ public class HelperMethods {
      * Extract the post data from the given HTTP Method.
      * 
      * @param method
-     * @return
+     * @return String 
      * @throws Exception
      */
     public static String getPostData(HttpMethodBase method) throws Exception {
@@ -101,7 +101,7 @@ public class HelperMethods {
      * 
      * @param doc
      * @param pathStr
-     * @return
+     * @return NodeList
      * @throws XPathExpressionException
      */
     public static NodeList performXPathEvaluation(final Document doc, final String pathStr)
