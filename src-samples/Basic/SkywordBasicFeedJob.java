@@ -1,29 +1,16 @@
 /*
- * Basic Publication Example
- * 
- * This class is a basic example of how to integrate with the Skyword XML Feeds.
- * 
- * Simply extend the skywordFeed class and override the following methods:
- * 
- * savetoCMS()
- * removeFropmCMS()
- * 
- * The SkywordFeed class implements all of the  work of ddownloading the XML feed and parseing it.
- * 
- * 
- * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
- * either express or implied. 
- * 
+ * Basic Publication Example This class is a basic example of how to integrate with the Skyword XML Feeds. Simply extend
+ * the skywordFeed class and override the following methods: savetoCMS() removeFropmCMS() The SkywordFeed class
+ * implements all of the work of ddownloading the XML feed and parseing it. This file is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.skyword.api.feed.HelperMethods;
 import com.skyword.api.feed.SkywordFeed;
 
 public class SkywordBasicFeedJob extends SkywordFeed {
@@ -36,7 +23,6 @@ public class SkywordBasicFeedJob extends SkywordFeed {
     public SkywordBasicFeedJob() {
     }
 
-    
     public static void main(String[] args) throws Exception {
 
         // Replace this with YOUR API Key!!
@@ -52,15 +38,11 @@ public class SkywordBasicFeedJob extends SkywordFeed {
     }
 
     /**
-     * Overrided method that would actually store the content into your CMS.
-     * 
-     * The return vaslue should the the fully qualified URL where the article was published to
-     * or NULL if not known or you want Skyword to auto-detect publication.
-     *  
+     * Overridden method that would actually store the content into your CMS. The return value should the the fully
+     * qualified URL where the article was published to or NULL if not known or you want Skyword to auto-detect
+     * publication.
      */
     public String saveToCMS(Map<String, Object> articleContents) throws Exception {
-
-        String articleUrl = null;
 
         log.info("Publishing content with Skyword Id: " + articleContents.get("id"));
         log.info("title: " + articleContents.get("title"));
@@ -83,10 +65,9 @@ public class SkywordBasicFeedJob extends SkywordFeed {
             }
         }
 
-        // Return NULL if the published URL is not known.
+        // Just return NULL if the published URL is not known.
         return null;
 
     }
-    
-    
+
 }

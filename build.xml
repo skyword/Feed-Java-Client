@@ -29,7 +29,7 @@
 	</path>
 
 	<target name="dist" depends="compile, slave-dist" />
-	<target name="compile" depends="compile-api, compile-sample-basic" />
+	<target name="compile" depends="compile-api, compile-sample-basic, compile-sample-image-download" />
 
 	<target name="compile-api">
 		<javac srcdir="${src-api.dir}:${generated.java.files}" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
@@ -45,7 +45,14 @@
 		</javac>
 	</target>
 	
-	<target name="clean">
+	<target name="compile-sample-image-download">
+		<javac srcdir="${src-samples.dir}/ImageDownload" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+			<classpath refid="pullapiclient.classpath" />
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+				<target name="clean">
 		<delete dir="${build.dir}" />
 		<delete dir="${pullapiclient.build.out}" />
 	</target>

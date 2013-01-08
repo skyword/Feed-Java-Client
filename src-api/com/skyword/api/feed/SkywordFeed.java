@@ -103,6 +103,7 @@ public class SkywordFeed {
                 }
             } catch (Exception e) {
                 log.error("Exception in processing of article id: " + contentId, e);
+                e.printStackTrace();
             }
         }
 
@@ -317,7 +318,7 @@ public class SkywordFeed {
             Integer responseCode = client.executeMethod(baseMethod);
             log.debug("Response code: " + responseCode.toString());
             byte[] fileByteArray = baseMethod.getResponseBody();
-            String mimeType = baseMethod.getResponseHeader("Content-Type").toExternalForm();
+            String mimeType = baseMethod.getResponseHeader("Content-Type").getValue();
             fa.setMimeType(mimeType);
             fa.setFileData(fileByteArray);
         } catch (Exception e) {
