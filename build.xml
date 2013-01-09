@@ -90,7 +90,7 @@
 	        <fileset dir="${src-samples.dir}" />
 	    </copy>
 
-		<zip destfile="${pullapiclient.build.out}/skyword-xml-feed-java-kit.zip"
+		<zip destfile="${pullapiclient.build.out}/skyword-xml-api.zip"
 		       basedir="${pullapiclient.build.out}/dist"
 			   
 		/>
