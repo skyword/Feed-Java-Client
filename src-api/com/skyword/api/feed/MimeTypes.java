@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 /**
- * File extensions to MIME types. Based on the Apache mime.types file.
+ * Provides a mapping to lookup the file extension for a mime-type or vice versa. 
  * 
  */
 public class MimeTypes {
