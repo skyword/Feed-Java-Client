@@ -38,7 +38,6 @@ public class EmbeddedImage extends SkywordFeed {
 
         EmbeddedImage sc = new EmbeddedImage();
         sc.setKey(key);
-        sc.setBaseUrl("http://api.skyword.com:7230"); // TAKE OUT.
 
         // Main method to call
         sc.processSkywordFeed();
@@ -93,33 +92,6 @@ public class EmbeddedImage extends SkywordFeed {
         
         log.info("processed body is now: " + body);
         
-
-        /*
-        // The <file> node contains the identifier of the image file
-        Integer fileId = new Integer((String) articleContents.get("attachmentid"));
-        log.info("file: " + fileId );
-
-        if ( fileId != null) {
-            // Download the file data from Skyword
-            FileAttachment fa = this.getFileAttachment(fileId);
-
-            // Output the mime type
-            log.info("mime-type: " + fa.getMimeType());
-
-            String extension = MimeTypes.getExtension(fa.getMimeType());
-            
-            // Save the file to the file system
-            String filename = fileId.toString() + "." + extension;
-            FileOutputStream fos = new FileOutputStream(filename);
-            fos.write(fa.getFileData());
-            fos.close();
-
-            // At this point, you would make sure to associate the content from 
-            // Skyword to the image you just saved.
-        }
-        */
-        
-
         // Just return NULL if the published URL is not known (or you want Skyword to detect it automatically).
         return null;
 
