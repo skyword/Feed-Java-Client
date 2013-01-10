@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -158,6 +159,7 @@ public class SkywordFeed {
             log.debug(baseMethod.getStatusLine().toString() + "\n\n" + postData);
             if (baseMethod.getStatusCode() != 200) { // javax.servlet.http.HttpServletResponse.SC_OK
                 log.error(baseMethod.getStatusLine().toString() + "\n\n" + postData);
+                throw new HttpException(baseMethod.getStatusLine().toString());
             }
         } catch (Exception e) {
             log.error("Processing of get method failed.", e);
@@ -284,6 +286,10 @@ public class SkywordFeed {
             log.debug("Response code from publish: " + responseCode.toString());
             postData = HelperMethods.getPostData(baseMethod);
             log.debug(baseMethod.getStatusLine().toString() + "\n\n" + postData);
+            if (baseMethod.getStatusCode() != 200) { // javax.servlet.http.HttpServletResponse.SC_OK
+                log.error(baseMethod.getStatusLine().toString() + "\n\n" + postData);
+                throw new HttpException(baseMethod.getStatusLine().toString());
+            }
         } catch (Exception e) {
             log.error("Processing of publish failed.", e);
         } finally {
@@ -317,6 +323,10 @@ public class SkywordFeed {
         try {
             Integer responseCode = client.executeMethod(baseMethod);
             log.debug("Response code: " + responseCode.toString());
+            if (baseMethod.getStatusCode() != 200) { // javax.servlet.http.HttpServletResponse.SC_OK
+                log.error(baseMethod.getStatusLine().toString());
+                throw new HttpException(baseMethod.getStatusLine().toString());
+            }
             byte[] fileByteArray = baseMethod.getResponseBody();
             String mimeType = baseMethod.getResponseHeader("Content-Type").getValue();
             fa.setMimeType(mimeType);
