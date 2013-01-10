@@ -55,7 +55,7 @@ public class ImageDownload extends SkywordFeed {
         log.info("body: " + articleContents.get("body"));
 
         // The <file> node contains the identifier of the image file
-        Integer fileId = new Integer((String) articleContents.get("attachmentid"));
+        Integer fileId = new Integer((String) articleContents.get("file"));
         log.info("file: " + fileId );
 
         if ( fileId != null) {
