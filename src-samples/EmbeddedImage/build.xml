@@ -1,0 +1,16 @@
+
+
+<project name="Skyword Content With Embedded Images Example" default="run" basedir=".">
+	
+
+	<path id="skyword.java.sdk.classpath">
+        <fileset dir="../../lib" includes="**/*.jar"/>
+        <pathelement location="."/>
+    </path>
+
+    <target name="run">
+        <javac srcdir="." destdir="." classpathref="skyword.java.sdk.classpath" debug="true" />
+        <java classname="EmbeddedImage" classpathref="skyword.java.sdk.classpath" fork="true" />
+    </target>
+	
+</project>
