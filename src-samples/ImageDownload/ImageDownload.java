@@ -1,13 +1,7 @@
-/**
- * Content With Images Example 
- * 
- * This class is a basic example of how to integrate with the Skyword XML Feeds. Simply extend
- * the skywordFeed class and override the following methods: savetoCMS() removeFropmCMS() The SkywordFeed class
- * implements all of the work of downloading the XML feed and parsing it. 
- * 
- * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+/*
+ * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied.
  */
-
 import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -19,6 +13,18 @@ import com.skyword.api.feed.FileAttachment;
 import com.skyword.api.feed.MimeTypes;
 import com.skyword.api.feed.SkywordFeed;
 
+/**
+ * Content With Images Example 
+ * 
+ * This class downloads content found in the Skyword XML feed and additionally downloads
+ * any attached files or images that are a part of the content.
+ * 
+ * Attached files are typically found in the XML node <file>.  The contents of this node 
+ * contain the Skyword ID of the file. Files are downloaded via the URL:
+ * 
+ * https://api.skyword.com/file?key=XXXXXX&contentId=YYYY&file=ZZZZ
+ * 
+ */
 public class ImageDownload extends SkywordFeed {
 
     protected static Log log = LogFactory.getLog(ImageDownload.class);
@@ -32,7 +38,7 @@ public class ImageDownload extends SkywordFeed {
     public static void main(String[] args) throws Exception {
 
         // Replace this with YOUR API Key!!
-        String key = "20jc3jbfuehkguwsf5gp";
+        String key = "API_TEST_KEY";
 
         ImageDownload sc = new ImageDownload();
         sc.setKey(key);
@@ -59,22 +65,27 @@ public class ImageDownload extends SkywordFeed {
         log.info("file: " + fileId );
 
         if ( fileId != null) {
-            // Download the file data from Skyword
+            
+            // Download the file data from Skyword via this helper method
             FileAttachment fa = this.getFileAttachment(fileId);
 
-            // Output the mime type
+            // Output the mime type of the file
             log.info("mime-type: " + fa.getMimeType());
 
+            // Determine the extension to use to store the file
             String extension = MimeTypes.getExtension(fa.getMimeType());
             
             // Save the file to the file system
-            String filename = fileId.toString() + "." + extension;
+            String path = "";  // The full path to the file
+            String filename = path + fileId.toString() + "." + extension;
+            log.info("Saving the file as: " + filename);
+            
             FileOutputStream fos = new FileOutputStream(filename);
             fos.write(fa.getFileData());
             fos.close();
 
-            // At this point, you would make sure to associate the content from 
-            // Skyword to the image you just saved.
+            // At this point, you would may want to make sure to associate the content from 
+            // Skyword to the image you just saved in your CMS content template somehow.
         }
         
 

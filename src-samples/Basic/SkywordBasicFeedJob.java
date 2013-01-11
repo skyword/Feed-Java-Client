@@ -1,10 +1,7 @@
 /*
- * Basic Publication Example This class is a basic example of how to integrate with the Skyword XML Feeds. Simply extend
- * the skywordFeed class and override the following methods: savetoCMS() removeFropmCMS() The SkywordFeed class
- * implements all of the work of ddownloading the XML feed and parseing it. This file is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied.
  */
-
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -13,6 +10,16 @@ import org.apache.commons.logging.LogFactory;
 
 import com.skyword.api.feed.SkywordFeed;
 
+
+
+/**
+ * Basic Publication Example 
+ * 
+ * This class is a basic example of how to integrate with the Skyword XML Feeds. Simply extend
+ * the skywordFeed class and override the following methods: savetoCMS() removeFropmCMS().
+ * The SkywordFeed class implements all of the work of ddownloading the XML feed and parseing it. 
+ *
+ */
 public class SkywordBasicFeedJob extends SkywordFeed {
 
     protected static Log log = LogFactory.getLog(SkywordBasicFeedJob.class);
@@ -26,7 +33,7 @@ public class SkywordBasicFeedJob extends SkywordFeed {
     public static void main(String[] args) throws Exception {
 
         // Replace this with YOUR API Key!!
-        String key = "20jc3jbfuehkguwsf5gp";
+        String key = "API_TEST_KEY";
 
         SkywordBasicFeedJob sc = new SkywordBasicFeedJob();
         sc.setKey(key);
