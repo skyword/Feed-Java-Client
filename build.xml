@@ -9,8 +9,9 @@
 	<property environment="env" />
 	<property file="build.properties" />
 
+	<property name="pullapiclient.filename" value="skyword-xml-api-java-1.0"/>
 	<property name="pullapiclient.build.out" value="build_out"/>
-	<property name="pullapiclient.build.out.dist" value="build_out/dist/skyword-xml-api"/>
+	<property name="pullapiclient.build.out.dist" value="build_out/dist/${pullapiclient.filename}"/>
 	<property name="pullapiclient.lib" value="lib"/>
 	<property name="build.dir" value="build_out/classes" />
 	<property name="generated.java.files" value="${basedir}" />
@@ -90,7 +91,7 @@
 	        <fileset dir="${src-samples.dir}" />
 	    </copy>
 
-		<zip destfile="${pullapiclient.build.out}/skyword-xml-api.zip"
+		<zip destfile="${pullapiclient.build.out}/${pullapiclient.filename}.zip"
 		       basedir="${pullapiclient.build.out}/dist"
 			   
 		/>
