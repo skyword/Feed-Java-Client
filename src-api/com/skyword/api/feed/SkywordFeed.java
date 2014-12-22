@@ -24,7 +24,7 @@ public class SkywordFeed {
 
     protected static Log log = LogFactory.getLog(SkywordFeed.class);
 
-    private String baseUrl = "http://api.skyword.com";
+    private String baseUrl = "https://api.skyword.com";
     private String key;
     private String feedUrl;
     private String publishUrl;
@@ -75,6 +75,8 @@ public class SkywordFeed {
      */
     public void processSkywordFeed() throws Exception {
 
+        System.out.println("In processSkywordFeed");
+
         // getArticles retrieves the list of articles that are currently approved.
         ArticleContents listData = this.getArticles();
         if (listData == null) {
@@ -89,6 +91,7 @@ public class SkywordFeed {
         // each article from their own CMS. It should return the full public URL for the article.
         for (Map<String, Object> oneArticle : listData) {
             String action = (String) oneArticle.get("action");
+            System.out.println("id: " + oneArticle.get("id"));
             log.info("id: " + oneArticle.get("id"));
             contentId = Long.valueOf((String) oneArticle.get("id"));
             try {
@@ -128,7 +131,7 @@ public class SkywordFeed {
         String xmlString = getArticlesAsXMLString();
 
         if (xmlString != null) {
-            listData = convertXMLToArticleContents(xmlString, "entry");
+            listData = convertXMLToArticleContents(xmlString, "articles");
         }
 
         return listData;
@@ -149,13 +152,16 @@ public class SkywordFeed {
         HttpMethodBase baseMethod = new GetMethod(feedUrl);
         baseMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
 
+        System.out.println("Retrieve request for URL: " + feedUrl);
         log.debug("Retrieve Request for URL: " + feedUrl);
 
         HttpClient client = HelperMethods.setupClient();
         try {
             Integer responseCode = client.executeMethod(baseMethod);
+            System.out.println("Response code: " + responseCode.toString());
             log.debug("Response code: " + responseCode.toString());
             postData = HelperMethods.getPostData(baseMethod);
+            System.out.println(baseMethod.getStatusLine().toString() + "\n\n" + postData);
             log.debug(baseMethod.getStatusLine().toString() + "\n\n" + postData);
             if (baseMethod.getStatusCode() != 200) { // javax.servlet.http.HttpServletResponse.SC_OK
                 log.error(baseMethod.getStatusLine().toString() + "\n\n" + postData);
@@ -180,7 +186,7 @@ public class SkywordFeed {
      */
     public ArticleContents convertXMLToArticleContents(String xmlString, String containerName) throws Exception {
 
-        log.debug("Parseing XML...");
+        log.debug("Parsing XML...");
         
         Document document = HelperMethods.convertXMLStringToDocument(xmlString);
         final NodeList nodes = HelperMethods.performXPathEvaluation(document, "//" + containerName);

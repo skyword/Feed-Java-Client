@@ -39,14 +39,24 @@ public class HelperMethods {
      * @throws UnsupportedEncodingException
      */
     public static String generateSlug(String input) throws UnsupportedEncodingException {
-        if (input == null || input.length() == 0)
+        if (null == input || 0 == input.length()) {
             return "";
-        String toReturn = normalize(input);
-        toReturn = toReturn.replace(" ", "-");
-        toReturn = toReturn.replace("'", "");
-        toReturn = toReturn.toLowerCase();
-        toReturn = URLEncoder.encode(toReturn, "UTF-8");
-        return toReturn;
+        }
+        String removelist = "a|an|as|at|before|but|by|for|from|is|in|into|like|of|off|on|onto|per|since|than|the|this|that|to|up|via|with";
+
+        String s = normalize(input);
+        s = s.toLowerCase();
+        s = s.replaceAll("\\b(" + removelist + ")\\b", "");
+        s = s.replaceAll("[^-\\w\\s]", ""); // remove unneeded chars
+        s = s.trim();
+        s = s.replaceAll("[\\s]+", "-"); // convert spaces to hyphens
+        s = s.replaceAll("-+", "-"); // collapse multiple hyphens to one hyphen
+        s = URLEncoder.encode(s, "UTF-8");
+        if (s.length() > 50) {
+            return s.substring(0, 50);
+        } else {
+            return s;
+        }
     }
 
     /**
