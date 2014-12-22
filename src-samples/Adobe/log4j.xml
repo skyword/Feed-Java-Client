@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+
+<log4j:configuration >
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <param name="Encoding" value="UTF-8"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%5p [%d{dd MMM yyyy HH:mm:ss}] (%C{1}:%t) %m%n"/>
+		</layout>
+	</appender>
+
+	<category name="com.skyword" additivity="false">
+		<priority value="debug"/>
+		<appender-ref ref="STDOUT"/>
+	</category>
+    
+	<root>
+		<priority value="info" />
+		<appender-ref ref="STDOUT"/>
+	</root>
+	
+</log4j:configuration>

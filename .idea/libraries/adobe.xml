@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="adobe">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-api-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-jcr2dav-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-jcr2spi-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-jcr-commons-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-spi-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-spi-commons-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-core-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-spi2dav-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jackrabbit-webdav-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/adobe/jcr-2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
