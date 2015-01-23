@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
 
-
 <project name="Skyword PullApi Client Code" default="all" basedir=".">
 
 	<!-- ================================================== -->
 	<!-- Load the properties, error out if unable to!       -->
 	<!-- ================================================== -->
 	<property environment="env" />
-	<property file="build.properties" />
 
 	<presetdef name="javac">
 		<javac includeantruntime="false" />
@@ -24,9 +22,8 @@
 	<property name="src-samples.dir" value="${basedir}/src-samples" />
 	<property name="docs.dir" value="${basedir}/docs" />
 
-    <target name="all" depends="clean, javadoc, dist"/>
-	<target name="all-adobe" depends="clean, javadoc, dist-adobe"/>
-    	
+    <target name="all" depends="clean, build-dependencies, dist"/>
+
 	<!-- Project classpath -->
 	<path id="pullapiclient.classpath">
 		<fileset dir="${pullapiclient.lib}">
@@ -43,70 +40,16 @@
 	    <pathelement path="${build.dir}" />
 	</path>
 	
-	<target name="dist" depends="compile, slave-dist" />
-	<target name="dist-adobe" depends="compile-adobe, slave-dist"/>
-	
-	<target name="compile" depends="compile-api, compile-samples" />
-	<target name="compile-adobe" depends="compile-api-adobe, compile-sample-adobe" />
+	<target name="dist" depends="slave-dist" />
 
-	<target name="compile-api">
-		<javac srcdir="${src-api.dir}" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
-			<classpath refid="pullapiclient.classpath" />
-		</javac>
-	</target>
-
-	<target name="compile-api-adobe">
-	    <javac srcdir="${src-api.dir}:${generated.java.files}" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
-	        <classpath refid="pullapiclient.adobe.classpath" />
-	        <include name="Adobe/*.java" />
-	    </javac>
-	</target>
-
-	<target name="compile-samples">
-		<javac srcdir="${src-samples.dir}" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
-			<classpath refid="pullapiclient.adobe.classpath" />
-		</javac>
-	</target>
-
-	<target name="compile-sample-basic">
-		<javac srcdir="${src-samples.dir}/Basic" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
-			<classpath refid="pullapiclient.classpath" />
-			<include name="**/*.java" />
-		</javac>
-	</target>
-	
-	<target name="compile-sample-image-download">
-		<javac srcdir="${src-samples.dir}/ImageDownload" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
-			<classpath refid="pullapiclient.classpath" />
-			<include name="**/*.java" />
-		</javac>
-	</target>
-
-	<target name="compile-sample-adobe">
-	    <javac srcdir="${src-samples.dir}/Adobe" destdir="${build.dir}" debug="true" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
-	        <classpath refid="pullapiclient.adobe.classpath" />
-	        <include name="**/*.java" />
-	    </javac>
+	<target name="build-dependencies">
+		<ant dir="src-api" target="api-feed-build" useNativeBasedir="true"/>
+		<ant dir="src-samples" target="api-samples-build" useNativeBasedir="true" />
 	</target>
 	
 	<target name="clean">
 		<delete dir="${build.dir}" />
 		<delete dir="${pullapiclient.build.out}" />
-	</target>
-
-	<target name="javadoc" depends="prepare" description="Create Javadocs for the source files">
-		<javadoc 
-	         destdir="${pullapiclient.build.out.dist}/documentation/javadoc/"
- 		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${src-api.dir}">
-			 <bottom><![CDATA[<i>Copyright &#169; 2013 Skyword, Inc. All Rights Reserved.</i>]]></bottom>
-	         <fileset dir="${basedir}/" includes="**/*.java" />
-			 <classpath>
-			    <fileset dir="${pullapiclient.lib}">
-			        <include name="*.jar" />
-			    	<include name="jcr/*.jar"/>
-			    </fileset>
-			 </classpath>
-	     </javadoc>
 	</target>
 		
 	
@@ -125,22 +68,13 @@
 	    </copy>
 				
 	    <copy todir="${pullapiclient.build.out.dist}/samples">
-	        <fileset dir="${src-samples.dir}" />
+	        <fileset dir="${src-samples.dir}">
+				<exclude name="*.iml" />
+			</fileset>
 	    </copy>
 
 		<zip destfile="${pullapiclient.build.out}/${pullapiclient.filename}.zip"
 		       basedir="${pullapiclient.build.out}/dist"/>
-	</target>
-
-	<target name="prepare">
-		<mkdir dir="${pullapiclient.build.out.dist}" />
-		<mkdir dir="${generated.java.files}" />
-		<mkdir dir="${build.dir}" />		
-		<mkdir dir="${pullapiclient.build.out.dist}/lib" />
-		<mkdir dir="${pullapiclient.build.out.dist}/samples" />
-		<mkdir dir="${pullapiclient.build.out.dist}/src" />
-		<mkdir dir="${pullapiclient.build.out.dist}/documentation" />
-		<mkdir dir="${pullapiclient.build.out.dist}/documentation/javadoc" />
 	</target>
 
 </project>
