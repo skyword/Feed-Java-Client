@@ -74,8 +74,16 @@ public class SkywordFeed {
      * @throws Exception
      */
     public void processSkywordFeed() throws Exception {
+        processSkywordFeed(null);
+    }
+
+    public void processSkywordFeed(String overrideUrl) throws Exception {
 
         System.out.println("In processSkywordFeed");
+
+        if (overrideUrl != null) {
+            setBaseUrl(overrideUrl);
+        }
 
         // getArticles retrieves the list of articles that are currently approved.
         ArticleContents listData = this.getArticles();
@@ -97,6 +105,7 @@ public class SkywordFeed {
             try {
                 if ("create".equals(action) || "update".equals(action)) {
                     publicUrl = saveToCMS(oneArticle);
+                    System.out.println("publicUrl: " + publicUrl);
                     // Only notify Skyword IF the article has a URL
                     if (publicUrl != null) {
                         publishNotify(contentId, publicUrl);
@@ -131,7 +140,7 @@ public class SkywordFeed {
         String xmlString = getArticlesAsXMLString();
 
         if (xmlString != null) {
-            listData = convertXMLToArticleContents(xmlString, "articles");
+            listData = convertXMLToArticleContents(xmlString);
         }
 
         return listData;
@@ -180,16 +189,17 @@ public class SkywordFeed {
      * Retrieve the contents of a given node name in the XML text.
      * 
      * @param xmlString
-     * @param containerName
      * @return ArticleContents
      * @throws Exception
      */
-    public ArticleContents convertXMLToArticleContents(String xmlString, String containerName) throws Exception {
+    public ArticleContents convertXMLToArticleContents(String xmlString) throws Exception {
 
         log.debug("Parsing XML...");
         
         Document document = HelperMethods.convertXMLStringToDocument(xmlString);
-        final NodeList nodes = HelperMethods.performXPathEvaluation(document, "//" + containerName);
+        NodeList child = document.getFirstChild().getChildNodes();
+
+        final NodeList nodes = document.getElementsByTagName(child.item(1).getNodeName());
 
         final ArticleContents out = new ArticleContents();
         int len = (nodes != null) ? nodes.getLength() : 0;
@@ -284,13 +294,16 @@ public class SkywordFeed {
         HttpMethodBase baseMethod = new GetMethod(publicUrl);
         baseMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
 
+        System.out.println("Publish notify for URL: " + publicUrl);
         log.debug("Publish notify for URL: " + publicUrl);
 
         HttpClient client = HelperMethods.setupClient();
         try {
             Integer responseCode = client.executeMethod(baseMethod);
+            System.out.println("Response code from publish: " + responseCode.toString());
             log.debug("Response code from publish: " + responseCode.toString());
             postData = HelperMethods.getPostData(baseMethod);
+            System.out.println(baseMethod.getStatusLine().toString() + "\n\n" + postData);
             log.debug(baseMethod.getStatusLine().toString() + "\n\n" + postData);
             if (baseMethod.getStatusCode() != 200) { // javax.servlet.http.HttpServletResponse.SC_OK
                 log.error(baseMethod.getStatusLine().toString() + "\n\n" + postData);

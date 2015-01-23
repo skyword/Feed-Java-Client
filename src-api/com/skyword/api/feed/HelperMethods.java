@@ -11,17 +11,11 @@ import java.text.Normalizer.Form;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpVersion;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
@@ -105,20 +99,6 @@ public class HelperMethods {
         Document document = builder.parse(new InputSource(new StringReader(xmlString)));
 
         return document;
-    }
-
-    /**
-     * 
-     * @param doc
-     * @param pathStr
-     * @return NodeList
-     * @throws XPathExpressionException
-     */
-    public static NodeList performXPathEvaluation(final Document doc, final String pathStr)
-            throws XPathExpressionException {
-        final XPath xpath = XPathFactory.newInstance().newXPath();
-        final XPathExpression expr = xpath.compile(pathStr);
-        return (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
     }
 
     /**
