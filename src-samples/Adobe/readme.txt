@@ -1,7 +1,7 @@
-Content with Embedded Images Example
+Content inserted into Adobe CQ/AEM
 
-This example downloads the Skyword XML feed and also process any embedded images found
-in the article body.
+This example downloads the Skyword XML feed and uses jcr to insert/update/delete the content and attached images into
+the Adobe AEM repository.
 
 How to Run:
 ant run
