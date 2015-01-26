@@ -25,11 +25,13 @@ import java.util.*;
 /**
  * Adobe CQ/AEM Example
  * 
- * An example class that fetches content via the XML feed and then inserts
- * the content into the Adobe CQ/AEM CMS.
+ * An example class that fetches content via the Skyword XML feed and then inserts
+ * the content into the Adobe CQ/AEM CMS.  
+ * 
+ * This class extends the base class SkywordFeed, which impements all of the major steps
+ * of downloading and parsing the XML feed.  
  *
  */
-
 public class SkywordAdobe extends SkywordFeed {
 
     private javax.jcr.Session session = null;
@@ -42,6 +44,7 @@ public class SkywordAdobe extends SkywordFeed {
 
     // Replace this with YOUR API Key!!
     // API_TEST_KEY is a default key you may use for initial testing
+    // This test key will output a static sample XML feed from the URL: https://api.skyword.com/feed?key=API_TEST_KEY
     // String key = "API_TEST_KEY";
     private static String key;
     private static String authorUrl;
@@ -49,14 +52,14 @@ public class SkywordAdobe extends SkywordFeed {
     private static String username;
     private static String password;
 
-    // set nodePathBase to be the path in adobe cq/aem to save the Skyword content.
+    // Set nodePathBase to be the base directory path in adobe cq/aem to save the Skyword content.
     private static String nodePathBase;
 
-    // if the node path includes any variable elements such as year/month put them in this Array.
+    // If the node path includes any prefix variable elements such as /year/month put them in this Array.
+    // This permits a more dynamic node path, for example /article/2015/01/this-is-the-title
     private static final ArrayList<String> nodePathAppend = new ArrayList<String>(Arrays.asList("{year}", "{month}"));
 
-
-    // this is the name of the template that will be used to display the content on the publish instance
+    // This is the name of the template that will be used to display the content on the publish instance
     private static String templateName;
     private static String slingPageResourceType;
     private static String slingFoundationType;
@@ -65,6 +68,9 @@ public class SkywordAdobe extends SkywordFeed {
 
     private static String imagesFolderNode;
 
+    /**
+     * Loads the static variables above from the configuration file config.properties.
+     */
     public static boolean loadPropertyValues() throws IOException {
         try {
             Properties prop = new Properties();
@@ -96,6 +102,11 @@ public class SkywordAdobe extends SkywordFeed {
         }
     }
 
+    /**
+     * The main starting point for the XMLF feed client.
+     * SkywordAdobe extends the class SkywordFeed which implements all of the 
+     * details of fetching the XML feed, parsing, and inserting int o the CMS.  
+     */
     public static void main(String[] args) throws Exception {
 
         if (!loadPropertyValues()) {
@@ -107,10 +118,7 @@ public class SkywordAdobe extends SkywordFeed {
         sc.setKey(key);
 
         // Main method to call. This version is to call a development or qa version of the feed server.
-        sc.processSkywordFeed("http://dev.api.skyword.com:7230/");
-
-        // to call Skyword's production environment
-        //sc.processSkywordFeed();
+        sc.processSkywordFeed();
 
         System.out.println("All work committed successfully");
         log.info("All work committed successfully");
@@ -121,7 +129,11 @@ public class SkywordAdobe extends SkywordFeed {
      * Overridden method that would actually store the content into your CMS. The return value should the the fully
      * qualified URL where the article was published to or NULL if not known or you want Skyword to auto-detect
      * publication.
+     * 
+     * @param articleContents The parsed contents of the XML feed
+     * @return The public URL that the content is published to 
      */
+    
     public String saveToCMS(Map<String, Object> articleContents) throws Exception {
 
         System.out.println("Publishing content with Skyword Id: " + articleContents.get("id"));
@@ -258,6 +270,7 @@ public class SkywordAdobe extends SkywordFeed {
             System.out.println("contentnode path: " + testContentNode.getPath());
             String contentPath = testContentNode.getPath();
             publishUrl = publishDomain + contentPath.substring(0, contentPath.lastIndexOf("/")) + ".html";
+
         } catch (Exception e) {
             System.out.println("Error in post");
             e.printStackTrace();
@@ -272,6 +285,16 @@ public class SkywordAdobe extends SkywordFeed {
 
     }
 
+    
+    /**
+     * Saves a file to the AEM/CQ repository.
+     * 
+     *  @param fa The file to save
+     *  @param root The root node to save the file contents to
+     *  @param fileName The name of the file to save
+     *  
+     *  @return the parent root path of the content removed
+     */
     public String saveAttachment(FileAttachment fa, Node root, String fileName) throws Exception {
 
         Node folderNode;
@@ -308,6 +331,12 @@ public class SkywordAdobe extends SkywordFeed {
 
     }
 
+    /**
+     * Removes a content item from the CMS.
+     * 
+     * @param articleContents the parsed article contents from the XML feed
+     * 
+     */
     public void removeFromCMS(Map<String, Object> articleContents) throws Exception {
         System.out.println("Removing content with Title: " + articleContents.get("title"));
 
