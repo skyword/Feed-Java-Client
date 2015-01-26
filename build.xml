@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Skyword PullApi Client Code" default="all" basedir=".">
+<project name="Skyword PullApi Client Package" default="all" basedir=".">
 
 	<!-- ================================================== -->
 	<!-- Load the properties, error out if unable to!       -->
@@ -17,7 +17,6 @@
 	<property name="pullapiclient.lib" value="lib"/>
 	<property name="pullapiclient.lib.adobe" value="${pullapiclient.lib}/jcr"/>
 	<property name="build.dir" value="build_out/classes" />
-	<property name="generated.java.files" value="${basedir}" />
 	<property name="src-api.dir" value="${basedir}/src-api" />
 	<property name="src-samples.dir" value="${basedir}/src-samples" />
 	<property name="docs.dir" value="${basedir}/docs" />

@@ -1,12 +1,7 @@
 #!/bin/bash
 
 # Put all property and config files into the classpath first
-cp="./:./etc/:"
-
-for i in ./etc/* ;
-do
-        cp=$cp:$i
-done
+cp="./:"
 
 # Append to the classpath from all files in the local lib directory
 for i in ../../lib/* ;
