@@ -32,15 +32,16 @@ public class SkywordBasicFeedJob extends SkywordFeed {
 
     public static void main(String[] args) throws Exception {
 
+        SkywordBasicFeedJob sc = new SkywordBasicFeedJob();
+
         // Replace this with YOUR API Key!!
         // API_TEST_KEY is a default key you may use for initial testing
         String key = "API_TEST_KEY";
-
-        SkywordBasicFeedJob sc = new SkywordBasicFeedJob();
         sc.setKey(key);
 
         // Main method to call
         sc.processSkywordFeed();
+
         log.info("All work committed successfuly");
 
     }

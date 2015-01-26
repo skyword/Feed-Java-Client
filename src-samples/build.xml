@@ -80,7 +80,8 @@
 	</target>
 
 	<target name="javadoc" depends="prepare" description="Create Javadocs for the source files">
-		<javadoc 
+        <!--  Remove by JLM, this was overwriting the API javadoc.
+	    <javadoc 
 	         destdir="${pullapiclient.build.out.dist}/documentation/javadoc/"
  		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${src-samples.dir}">
 			 <bottom><![CDATA[<i>Copyright &#169; 2015 Skyword, Inc. All Rights Reserved.</i>]]></bottom>
@@ -95,6 +96,7 @@
 				 </fileset>
 			 </classpath>
 	     </javadoc>
+	     -->
 	</target>
 		
 	

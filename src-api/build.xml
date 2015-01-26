@@ -46,8 +46,11 @@
 	<target name="javadoc" depends="prepare" description="Create Javadocs for the source files">
 		<javadoc 
 	         destdir="${pullapiclient.build.out.dist}/documentation/javadoc/"
- 		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${src-api.dir}">
+ 		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${src-api.dir}"
+ 		     windowtitle="Skyword XML Feed API Kit"
+ 		     >
 			 <bottom><![CDATA[<i>Copyright &#169; 2015 Skyword, Inc. All Rights Reserved.</i>]]></bottom>
+	         <doctitle>Skyword XML Feed API Kit</doctitle>
 	         <fileset dir="${src-api.dir}/" includes="**/*.java" />
 			 <classpath>
 			    <fileset dir="${pullapiclient.lib}">

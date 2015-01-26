@@ -16,8 +16,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Main API class to extend.  Override the methods savetoCMS() and removeFromCMS()
+ * This is the main API class to extend.  This class:
+ * <ol>
+ * <li>downloads the XML feed from the Skyword API servers
+ * <li>parses the feed into individual content items and iterates through each
+ * <li>calls the method saveToCMS() which you should overide
+ * <li>informs Skyword of the published contents public URL
  * 
+ * Extend this class and override the methods savetoCMS() and removeFromCMS()
+ * 
+ * You must set your API key using the setKey() method.  Contact Skyword to obtain your API key.
+ *
+ * Call the method processSkywordFeed() to start this class
  *
  */
 public class SkywordFeed {

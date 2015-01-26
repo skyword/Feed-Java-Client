@@ -1,0 +1,50 @@
+<html>
+<body>
+The Skyword XML API Java Devleopment Kit is designed to help you implement your integration with the Skyword content marketing platform.
+<br/><br/>
+
+Please review the included documentation PDF for a comprehensive description of the XML feed.
+<br/><br/>
+
+This Java kit provides you with a base implementation that will:
+<ol>
+<li>Download the XML feed
+<li>Parse the XML
+<li>Iterate through one or more content items provided in the XML feed
+<li>Call the saveToCMS() method that you can overide to implement your own CMS insert
+<li>Informs Skyword of the published contents public URL
+</ol>  
+To use this kit simply create a new class that extends the SkywordFeed class.  
+Overide the saveToCMS() method and invoke the processSkywordFeed() method.
+
+<pre>
+<code>
+public class MyFeed extends SkywordFeed {
+
+    public MyFeed() {
+    }
+
+    public static void main(String[] args) throws Exception {
+        MyFeed feed = new MyFeed();
+
+        // Replace this with YOUR API Key!!
+        // API_TEST_KEY is a default key you may use for initial testing
+        String key = "API_TEST_KEY";
+        feed.setKey(key);
+
+        // Main method to call
+        feed.processSkywordFeed();
+    }
+
+    public String saveToCMS(Map<String, Object> articleContents) throws Exception {
+        System.out.println("Publishing content with Skyword Id: " + articleContents.get("id"));
+
+        // Just return NULL if the published URL is not known.
+        return null;
+    }
+}
+</code>
+</pre>
+  
+</body>
+</html>
