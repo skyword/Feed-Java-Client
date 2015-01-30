@@ -45,7 +45,7 @@
 
 	<target name="javadoc" depends="prepare" description="Create Javadocs for the source files">
 		<javadoc 
-	         destdir="${pullapiclient.build.out.dist}/documentation/javadoc/"
+	         destdir="${pullapiclient.build.out.dist}/docs/javadoc/"
  		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${src-api.dir}"
  		     windowtitle="Skyword XML Feed API Kit"
  		     >
@@ -78,8 +78,8 @@
 		<mkdir dir="${build.dir}" />		
 		<mkdir dir="${pullapiclient.build.out.dist}/lib" />
 		<mkdir dir="${pullapiclient.build.out.dist}/src" />
-		<mkdir dir="${pullapiclient.build.out.dist}/documentation" />
-		<mkdir dir="${pullapiclient.build.out.dist}/documentation/javadoc" />
+		<mkdir dir="${pullapiclient.build.out.dist}/docs" />
+		<mkdir dir="${pullapiclient.build.out.dist}/docs/javadoc" />
 	</target>
 
 </project>
