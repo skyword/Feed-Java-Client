@@ -11,7 +11,7 @@
 		<javac includeantruntime="false" />
 	</presetdef>
 
-	<property name="pullapiclient.filename" value="skyword-xml-api-java-1.0"/>
+	<property name="pullapiclient.filename" value="skyword-xml-api-java-1.1"/>
 	<property name="pullapiclient.build.out" value="build_out"/>
 	<property name="pullapiclient.build.out.dist" value="build_out/dist/${pullapiclient.filename}"/>
 	<property name="pullapiclient.lib" value="lib"/>
