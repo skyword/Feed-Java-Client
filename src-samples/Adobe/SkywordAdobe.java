@@ -8,18 +8,11 @@ import com.skyword.api.feed.HelperMethods;
 import com.skyword.api.feed.SkywordFeed;
 import org.apache.jackrabbit.commons.JcrUtils;
 
-import javax.jcr.Binary;
-import javax.jcr.Node;
-import javax.jcr.Repository;
-import javax.jcr.SimpleCredentials;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import javax.jcr.*;
+import java.io.*;
 import java.util.*;
+
+;
 
 /**
  * Adobe CQ/AEM Example
@@ -33,7 +26,8 @@ import java.util.*;
  */
 public class SkywordAdobe extends SkywordFeed {
 
-    private javax.jcr.Session session = null;
+    public static final String NT_UNSTRUCTURED = "nt:unstructured";
+    private Session session = null;
 
     /**
      * Default constructor.
@@ -124,107 +118,46 @@ public class SkywordAdobe extends SkywordFeed {
 
     }
 
-    /**
-     * Overridden method that would actually store the content into your CMS. The return value should the the fully
-     * qualified URL where the article was published to or NULL if not known or you want Skyword to auto-detect
-     * publication.
-     * 
-     * @param articleContents The parsed contents of the XML feed
-     * @return The public URL that the content is published to 
-     */
-    
     public String saveToCMS(Map<String, Object> articleContents) throws Exception {
 
         System.out.println("Publishing content with Skyword Id: " + articleContents.get("id"));
         System.out.println("title: " + articleContents.get("title"));
         System.out.println("body: " + articleContents.get("body"));
-        
+
+        Long contentId = (Long) articleContents.get("id");
+
+        //Connect to Repo amd get root Node
         Repository repo = JcrUtils.getRepository(authorUrl);
+        Node root = getRootNode(repo, username, password);
+
         String publishUrl = "";
-
         try {
+            //Create preliminary structure for article
+            Node baseNode = getBaseNode(root);
 
-            //Create a Session instance
-            session = repo.login(new SimpleCredentials(username, password.toCharArray()));
+            String titleSlug = HelperMethods.generateSlug((String) articleContents.get("title"));
+            Node articleNode = getOrCreateNode(titleSlug, baseNode, "cq:Page");
+            Node jcrContentNode = getOrCreateNode("jcr:content", articleNode, "cq:PageContent");
 
-            //Create a Node
-            Node root = session.getRootNode();
-            System.out.println("rootNode: " + root.getIdentifier() + " : " + root.getName());
-            
-            Node leafNode;
-            try {
-                leafNode = root.getNode(nodePathBase);
-            } catch (Exception e) {
-                leafNode = root.addNode(nodePathBase, "cq:Page");
-            }
+            jcrContentNode.setProperty("jcr:title", (String) articleContents.get("title"));
+            jcrContentNode.setProperty("author", (String) articleContents.get("author"));
+            jcrContentNode.setProperty("cq:template", templateName);
+            jcrContentNode.setProperty("cq:lastModified", Calendar.getInstance());
+            jcrContentNode.setProperty("cq:lastModifiedBy", session.getUserID());
+            jcrContentNode.setProperty("cq:distribute", true);
+            jcrContentNode.setProperty("sling:resourceType", slingPageResourceType);
+            //Add contentID for tracking tag.
+            jcrContentNode.setProperty("contentId", contentId);
 
-            Calendar pCal = new GregorianCalendar();
-            int yr = pCal.get(Calendar.YEAR);
-            int mnth = pCal.get(Calendar.MONTH) + 1;
-
-            //
-            // any variable elements added to the node path array above need to be handled here
-            //
-            for (String pathAppend : nodePathAppend) {
-
-                if (pathAppend.equals("{year}")) {
-                    pathAppend = String.valueOf(yr);
-                } else if (pathAppend.equals("{month}")) {
-                    pathAppend = String.valueOf(mnth);
-                }
-
-                try {
-                    leafNode = leafNode.getNode(pathAppend);
-                } catch (Exception e) {
-                    leafNode = leafNode.addNode(pathAppend, "cq:Page");
-                }
-            }
-
-            String newNodeName = HelperMethods.generateSlug((String) articleContents.get("title"));
-            Node titleNode;
-
-            try {
-                titleNode = leafNode.getNode(newNodeName);
-            } catch (Exception e) {
-                titleNode = leafNode.addNode(newNodeName, "cq:Page");
-            }
-
-            Node testContentNode;
-
-            try {
-                testContentNode = titleNode.getNode("jcr:content");
-            } catch (Exception e) {
-                testContentNode = titleNode.addNode("jcr:content", "cq:PageContent");
-            }
-
-            testContentNode.setProperty("jcr:title", (String) articleContents.get("title"));
-            testContentNode.setProperty("author", (String) articleContents.get("author"));
-            testContentNode.setProperty("cq:template", templateName);
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            Date date = df.parse((String) articleContents.get("publishedDate"));
-            Calendar thisTime = new GregorianCalendar();
-            thisTime.setTime(date);
-            testContentNode.setProperty("published", thisTime);
-            testContentNode.setProperty("sling:resourceType", slingPageResourceType);
 
             // For this example the content body is stored in a Paragraph System
             // http://wem.help.adobe.com/enterprise/en_US/10-0/wem/wcm/default_components.html#Paragraph%20System%20(parsys)
             //
             // This is the component that the demo platform provided by Adobe uses.
-            Node testParNode;
-            try {
-                testParNode = testContentNode.getNode("par");
-            } catch (Exception e) {
-                testParNode = testContentNode.addNode("par", "nt:unstructured");
-            }
-            testParNode.setProperty("sling:resourceType", slingFoundationType + "parsys");
+            Node parNode = getOrCreateNode("par", jcrContentNode, NT_UNSTRUCTURED);
 
-            Node testEntryNode;
-            try {
-                testEntryNode = testParNode.getNode("entry");
-            } catch (Exception e) {
-                testEntryNode = testParNode.addNode("entry", "nt:unstructured");
-            }
+            Node testEntryNode = getOrCreateNode("entry", parNode, NT_UNSTRUCTURED);
+
             testEntryNode.setProperty("sling:resourceType", slingEntryType);
             testEntryNode.setProperty("text", (String) articleContents.get("body"));
 
@@ -247,80 +180,129 @@ public class SkywordAdobe extends SkywordFeed {
 
                 String imageUrl = saveAttachment(fa, root, (String) articleContents.get("filename"));
 
-                Node textImageNode;
-                try {
-                    textImageNode = testParNode.getNode("textimage");
-                } catch (Exception e) {
-                    textImageNode = testParNode.addNode("textimage", "nt:unstructured");
-                }
+                Node textImageNode = getOrCreateNode("textimage", parNode, NT_UNSTRUCTURED);
                 textImageNode.setProperty("sling:resourceType", slingFoundationType + "textimage");
                 textImageNode.setProperty("text", (String) articleContents.get("featured_imagetitle"));
 
-                Node imageNode;
-                try {
-                    imageNode = textImageNode.getNode("image");
-                } catch (Exception e) {
-                    imageNode = textImageNode.addNode("image", "nt:unstructured");
-                }
+                Node imageNode = getOrCreateNode("image", textImageNode, NT_UNSTRUCTURED);
                 imageNode.setProperty("sling:resourceType", slingFoundationType + "image");
                 imageNode.setProperty("fileReference", imageUrl);
             }
 
-            System.out.println("contentnode path: " + testContentNode.getPath());
-            String contentPath = testContentNode.getPath();
-            publishUrl = publishDomain + contentPath.substring(0, contentPath.lastIndexOf("/")) + ".html";
 
+            String contentPath = jcrContentNode.getPath();
+            publishUrl = publishDomain + contentPath.substring(0, contentPath.lastIndexOf("/")) + ".html";
+            session.save();
+            session.logout();
         } catch (Exception e) {
-            System.out.println("Error in post");
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.save();
-                session.logout();
-            }
+            log.error("Error in post", e);
         }
 
         return publishUrl;
 
     }
 
-    
+    /**
+     * 
+     *
+     * @param root
+     * @return
+     * @throws RepositoryException
+     */
+    private Node getBaseNode(Node root) throws RepositoryException {
+        Node baseNode = getOrCreateNode(nodePathBase, root, "nt:folder");
+
+        Calendar pCal = new GregorianCalendar();
+        int yr = pCal.get(Calendar.YEAR);
+        int mnth = pCal.get(Calendar.MONTH) + 1;
+
+        //
+        // any variable elements added to the node path array above need to be handled here
+        //
+        for (String pathAppend : nodePathAppend) {
+
+            if (pathAppend.equals("{year}")) {
+                pathAppend = String.valueOf(yr);
+            } else if (pathAppend.equals("{month}")) {
+                pathAppend = String.valueOf(mnth);
+            }
+
+            baseNode = getOrCreateNode(pathAppend, baseNode, "cq:Page");
+        }
+        return baseNode;
+    }
+
+    /**
+     * Get root node
+     *
+     * @param repo
+     * @param username
+     * @param password
+     * @return
+     * @throws RepositoryException
+     */
+    private Node getRootNode(Repository repo, String username, String password) throws RepositoryException {
+        //Create a Session instance
+        session = repo.login(new SimpleCredentials(username, password.toCharArray()));
+
+        Node root = session.getRootNode();
+        log.info("rootNode: " + root.getIdentifier() + " : " + root.getName());
+
+        return root;
+    }
+
+
+    /**
+     * Create a new node
+     *
+     * @param nodeName
+     * @param parentNode
+     * @param jcrPrimaryType
+     * @return
+     * @throws RepositoryException Will be thrown if node already exists
+     */
+    private Node createNode(String nodeName, Node parentNode, String jcrPrimaryType) throws RepositoryException {
+        return parentNode.addNode(nodeName, jcrPrimaryType);
+    }
+
+    /**
+     * Get node by name or create one if it doesn't exist
+     *
+     * @param nodeName
+     * @param parentNode
+     * @param jcrPrimaryType
+     * @return
+     * @throws RepositoryException
+     */
+    private Node getOrCreateNode(String nodeName, Node parentNode, String jcrPrimaryType) throws RepositoryException {
+        if (parentNode.hasNode(nodeName)) {
+            return parentNode.getNode(nodeName);
+        } else {
+            return createNode(nodeName, parentNode, jcrPrimaryType);
+        }
+    }
+
+
     /**
      * Saves a file to the AEM/CQ repository.
-     * 
+     *
      *  @param fa The file to save
      *  @param root The root node to save the file contents to
      *  @param fileName The name of the file to save
-     *  
+     *
      *  @return the parent root path of the content removed
      */
     public String saveAttachment(FileAttachment fa, Node root, String fileName) throws Exception {
 
-        Node folderNode;
-        try {
-            folderNode = root.getNode(imagesFolderNode);
-        } catch (Exception e) {
-            folderNode = root.addNode(imagesFolderNode, "sling:Folder");
-        }
+        Node folderNode = getOrCreateNode(imagesFolderNode, root, "sling:Folder");
 
         InputStream is = new ByteArrayInputStream(fa.getFileData());
         Binary binary = session.getValueFactory().createBinary(is);
 
-        Node fileNode;
-        try {
-            fileNode = folderNode.getNode(fileName);
-        } catch (Exception e) {
-            fileNode = folderNode.addNode(fileName, "nt:file");
-        }
+        Node fileNode = getOrCreateNode(fileName, folderNode, "nt:file");
 
         //create the mandatory child node - jcr:content
-        Node resNode;
-        try {
-            resNode = fileNode.getNode("jcr:content");
-        } catch (Exception e) {
-            resNode = fileNode.addNode("jcr:content", "nt:resource");
-        }
-
+        Node resNode = getOrCreateNode("jcr:content", fileNode, "nt:resource");
         resNode.setProperty ("jcr:mimeType", fa.getMimeType());
         resNode.setProperty("jcr:data", binary);
         resNode.setProperty("jcr:lastModified", (new Date()).getTime());
@@ -328,54 +310,5 @@ public class SkywordAdobe extends SkywordFeed {
         String path = resNode.getPath();
         return path.substring(0, path.lastIndexOf("/"));
 
-    }
-
-    /**
-     * Removes a content item from the CMS.
-     * 
-     * @param articleContents the parsed article contents from the XML feed
-     * 
-     */
-    public void removeFromCMS(Map<String, Object> articleContents) throws Exception {
-        System.out.println("Removing content with Title: " + articleContents.get("title"));
-
-        Repository repo = JcrUtils.getRepository(authorUrl);
-
-        try {
-
-            //Create a Session instance
-            session = repo.login(new SimpleCredentials(username, password.toCharArray()));
-
-            //Create a Node
-            Node root = session.getRootNode();
-            System.out.println("rootNode: " + root.getIdentifier() + " : " + root.getName());
-
-            Node leafNode;
-            try {
-                leafNode = root.getNode(nodePathBase);
-            } catch (Exception e) {
-                leafNode = root.addNode(nodePathBase, "cq:Page");
-            }
-
-            String newNodeName = HelperMethods.generateSlug((String) articleContents.get("title"));
-            Node titleNode = null;
-            try {
-                titleNode = leafNode.getNode(newNodeName);
-            } catch (Exception e) {
-                System.out.println("No title node exists for : " + newNodeName);
-            }
-
-            if (titleNode != null) {
-                titleNode.remove();
-            }
-        } catch (Exception e) {
-            System.out.println("Exception in removeFromCMS.");
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.save();
-                session.logout();
-            }
-        }
     }
 }
