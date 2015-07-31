@@ -116,7 +116,7 @@ public class SkywordAdobe extends SkywordFeed {
         SkywordAdobe sc = new SkywordAdobe();
         sc.setKey(key);
 
-        // Main method to call. This version is to call a development or qa version of the feed server.
+        // Main method to call.
         sc.processSkywordFeed();
 
         System.out.println("All work committed successfully");

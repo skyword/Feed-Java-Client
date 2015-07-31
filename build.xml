@@ -11,7 +11,7 @@
 		<javac includeantruntime="false" />
 	</presetdef>
 
-	<property name="pullapiclient.filename" value="skyword-xml-api-java-1.0"/>
+	<property name="pullapiclient.filename" value="skyword-xml-api-java-1.1"/>
 	<property name="pullapiclient.build.out" value="build_out"/>
 	<property name="pullapiclient.build.out.dist" value="build_out/dist/${pullapiclient.filename}"/>
 	<property name="pullapiclient.lib" value="lib"/>
@@ -53,7 +53,7 @@
 		
 	
 	<target name="slave-dist">
-	    <copy todir="${pullapiclient.build.out.dist}/documentation" >
+	    <copy todir="${pullapiclient.build.out.dist}/docs" >
 	        <fileset dir="${docs.dir}" />
 	    </copy>
 
@@ -66,7 +66,7 @@
 	        <fileset dir="${pullapiclient.lib}" />
 	    </copy>
 				
-	    <copy todir="${pullapiclient.build.out.dist}/samples">
+	    <copy todir="${pullapiclient.build.out.dist}/src-samples">
 	        <fileset dir="${src-samples.dir}">
 				<exclude name="*.iml" />
 			</fileset>

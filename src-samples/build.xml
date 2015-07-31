@@ -39,7 +39,14 @@
 	    </fileset>
 	    <pathelement path="${build.dir}" />
 	</path>
-	
+
+	<!-- ==================== Run Target ===================================== -->
+	<target name="run" depends="dist" description="Run the Batch system">
+		<java fork="true" dir="${basedir}/${build.dir}" classname="SkywordAdobe">
+			<classpath refid="pullapiclient.adobe.classpath" />
+		</java>
+	</target>
+
 	<target name="dist" depends="compile-samples, slave-dist" />
 
 	<target name="compile-samples">
@@ -82,7 +89,7 @@
 	<target name="javadoc" depends="prepare" description="Create Javadocs for the source files">
         <!--  Remove by JLM, this was overwriting the API javadoc.
 	    <javadoc 
-	         destdir="${pullapiclient.build.out.dist}/documentation/javadoc/"
+	         destdir="${pullapiclient.build.out.dist}/docs/javadoc/"
  		     additionalparam="-J-Dorg.apache.commons.attributes.javadoc.CATaglet.sources=${src-samples.dir}">
 			 <bottom><![CDATA[<i>Copyright &#169; 2015 Skyword, Inc. All Rights Reserved.</i>]]></bottom>
 	         <fileset dir="${src-samples.dir}/" includes="**/*.java" />
@@ -102,26 +109,26 @@
 	
 	<target name="slave-dist">
 		<echo message="in src-samples slave-dist task"/>
-	    <copy todir="${pullapiclient.build.out.dist}/documentation" >
+	    <copy todir="${pullapiclient.build.out.dist}/docs" >
 	        <fileset dir="${docs.dir}" />
 	    </copy>
 				
-	    <copy todir="${pullapiclient.build.out.dist}/samples">
+	    <copy todir="${pullapiclient.build.out.dist}/src-samples">
 	        <fileset dir="${src-samples.dir}">
 				<exclude name="*.iml" />
 			</fileset>
 	    </copy>
-		<chmod file="${pullapiclient.build.out.dist}/samples/batch.sh" perm="755"/>
+		<chmod file="${pullapiclient.build.out.dist}/src-samples/batch.sh" perm="755"/>
 	</target>
 
 	<target name="prepare">
 		<mkdir dir="${pullapiclient.build.out.dist}" />
 		<mkdir dir="${build.dir}" />		
 		<mkdir dir="${pullapiclient.build.out.dist}/lib" />
-		<mkdir dir="${pullapiclient.build.out.dist}/samples" />
+		<mkdir dir="${pullapiclient.build.out.dist}/src-samples" />
 		<mkdir dir="${pullapiclient.build.out.dist}/src" />
-		<mkdir dir="${pullapiclient.build.out.dist}/documentation" />
-		<mkdir dir="${pullapiclient.build.out.dist}/documentation/javadoc" />
+		<mkdir dir="${pullapiclient.build.out.dist}/docs" />
+		<mkdir dir="${pullapiclient.build.out.dist}/docs/javadoc" />
 	</target>
 
 </project>
